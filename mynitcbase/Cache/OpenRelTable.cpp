@@ -22,6 +22,8 @@ OpenRelTable::OpenRelTable()
   Attribute relCatRecord[RELCAT_NO_ATTRS];
   relCatBlock.getRecord(relCatRecord, RELCAT_SLOTNUM_FOR_RELCAT);
 
+
+
   struct RelCacheEntry relCacheEntry;
   RelCacheTable::recordToRelCatEntry(relCatRecord, &relCacheEntry.relCatEntry);
   relCacheEntry.recId.block = RELCAT_BLOCK;
