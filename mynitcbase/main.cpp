@@ -120,7 +120,13 @@ void read_cache()
     {
       AttrCatEntry attrcatbuf;
       AttrCacheTable::getAttrCatEntry(rel_Id, i, &attrcatbuf); // attribute offset i
-      printf("  %s: %d\n", attrcatbuf.attrName, attrcatbuf.attrType);
+      printf("  %s: ", attrcatbuf.attrName);
+      if(attrcatbuf.attrType==NUMBER){
+        printf("NUM \n");
+      }
+      else{
+        printf("STR \n");
+      }
     }
   }
 }
