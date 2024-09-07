@@ -1,7 +1,7 @@
 #include "Buffer/StaticBuffer.h"
 #include "Cache/OpenRelTable.h"
 #include "Disk_Class/Disk.h"
-// #include "FrontendInterface/FrontendInterface.h"
+#include "FrontendInterface/FrontendInterface.h"
 #include <iostream>
 #include <cstring>
 
@@ -131,13 +131,10 @@ void read_cache()
   }
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   Disk disk_run;
-  // print_attr();
-  // rename_attr();
   StaticBuffer buffer;
   OpenRelTable cache;
-  read_cache();
-  return 0;
+
+  return FrontendInterface::handleFrontend(argc, argv);
 }
