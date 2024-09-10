@@ -106,6 +106,5 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
             break;
         }
     }
-
     return SUCCESS; // Return success code
 }
