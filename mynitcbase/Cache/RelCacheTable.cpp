@@ -59,6 +59,7 @@ int RelCacheTable::getSearchIndex(int relId, RecId *searchIndex)
   return SUCCESS;
 }
 
+//Stage 4
 // sets the searchIndex for the relation corresponding to relId
 int RelCacheTable::setSearchIndex(int relId, RecId *searchIndex)
 {
@@ -74,6 +75,7 @@ int RelCacheTable::setSearchIndex(int relId, RecId *searchIndex)
   return SUCCESS;
 }
 
+//Stage 4. To start a linear search the searchIndex has to be set {-1,-1}
 int RelCacheTable::resetSearchIndex(int relId)
 {
   // use setSearchIndex to set the search index to {-1, -1}

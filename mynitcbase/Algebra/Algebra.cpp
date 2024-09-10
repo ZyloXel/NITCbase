@@ -18,6 +18,7 @@ bool isNumber(char* str) {
     return ret == 1 && len == strlen(str);
 }
 
+//Stage 4
 /* Function to select all records from a source relation (table) that satisfy a given condition.
  * Parameters:
  * - srcRel: The name of the source relation from which to select records.

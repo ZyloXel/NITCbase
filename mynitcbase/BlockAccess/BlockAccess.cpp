@@ -3,7 +3,7 @@
 #include "BlockAccess.h"
 #include <cstring>
 
-
+//Stage 4
 RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attribute attrVal, int op) {
     // Initialize a RecId object to store the previous record ID
     RecId prevRecId;

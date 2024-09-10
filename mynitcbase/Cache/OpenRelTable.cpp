@@ -142,6 +142,7 @@ Since we are currently only working with the relation and attribute catalog, we
 will just hardcode it. In subsequent stages, we will loop through all the relations
 and open the appropriate one.
 */
+//Stage 4
 int OpenRelTable::getRelId(char relName[ATTR_SIZE]) {
 
   /* traverse through the tableMetaInfo array,

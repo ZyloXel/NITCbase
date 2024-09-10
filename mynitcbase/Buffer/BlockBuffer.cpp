@@ -105,6 +105,7 @@ int RecBuffer::setRecord(union Attribute *rec, int slotNum)
   return SUCCESS;
 }
 
+//Stage 4
 int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char **buffPtr)
 {
   // check whether the block is already present in the buffer using StaticBuffer.getBufferNum()
@@ -128,6 +129,7 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char **buffPtr)
   return SUCCESS;
 }
 
+//Stage 4
 /* used to get the slotmap from a record block
 NOTE: this function expects the caller to allocate memory for `*slotMap`
 */
