@@ -2,6 +2,8 @@
 
 #include <cmath>
 #include <cstring>
+
+
 //Stage 5
 int Schema::openRel(char relName[ATTR_SIZE]) {
   int ret = OpenRelTable::openRel(relName);
