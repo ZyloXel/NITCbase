@@ -78,6 +78,7 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum)
   return SUCCESS; // Return SUCCESS to indicate the operation was successful
 }
 
+// Stage 6
 int RecBuffer::setRecord(union Attribute *rec, int slotNum)
 {
   unsigned char *buffer_ptr;

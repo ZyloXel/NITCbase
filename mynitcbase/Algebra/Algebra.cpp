@@ -29,7 +29,7 @@ bool isNumber(char* str) {
 int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]) {
     // Get the relation ID of the source relation
     int srcRelId = OpenRelTable::getRelId(srcRel);
-    printf("srcRelId: %d\n", srcRelId);
+    //printf("srcRelId: %d\n", srcRelId);
     // Return error code if the relation is not open
     if (srcRelId == E_RELNOTOPEN) 
     {
