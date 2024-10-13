@@ -123,6 +123,15 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char **buffPtr)
     Disk::readBlock(StaticBuffer::blocks[bufferNum], this->blockNum);
   }
 
+  else{
+    for(int i=0;i<BUFFER_CAPACITY;i++){
+      if(StaticBuffer::metainfo[i].free==false){
+        StaticBuffer::metainfo[i].timeStamp++;
+      }
+    }
+    StaticBuffer::metainfo[blockNum].timeStamp=0;
+  }
+
   // store the pointer to this buffer (blocks[bufferNum]) in *buffPtr
   *buffPtr = StaticBuffer::blocks[bufferNum];
 
