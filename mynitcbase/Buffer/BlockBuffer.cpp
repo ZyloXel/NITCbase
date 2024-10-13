@@ -320,7 +320,7 @@ int BlockBuffer::getFreeBlock(int blockType)
   this->setHeader(&header);
 
   // update the block type of the block to the input block type using setBlockType().
-  this->setBlockType(&blockType);
+  this->setBlockType(blockType);
 
   // return block number of the free block.
   return freeBlock;
