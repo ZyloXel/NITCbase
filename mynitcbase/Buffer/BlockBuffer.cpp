@@ -18,6 +18,7 @@ int compareAttrs(union Attribute attr1, union Attribute attr2, int attrType)
     return 0;
 }
 
+//constructor to initialise blockbuffer with a given number
 BlockBuffer::BlockBuffer(int blockNum)
 {
 
