@@ -6,7 +6,7 @@
         "cwd": "${workspaceFolder}/mynitcbase",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/mynitcbase/nitcbase-debug", // Binary to exec
+        "program": "${workspaceFolder}/mynitcbase/nitcbase", // Binary to exec
         "stopAtEntry": false,
         "environment": [],
         "externalConsole": false,

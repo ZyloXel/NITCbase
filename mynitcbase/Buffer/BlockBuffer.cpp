@@ -39,12 +39,18 @@ int BlockBuffer::getHeader(struct HeadInfo *head)
   // read the block at this.blockNum into the buffer
 
   // populate the numEntries, numAttrs and numSlots fields in *head
-  memcpy(&head->numSlots, buffer + 24, 4);
-  memcpy(&head->numEntries, buffer + 16, 4);
-  memcpy(&head->numAttrs, buffer + 20, 4);
-  memcpy(&head->rblock, buffer + 12, 4);
-  memcpy(&head->lblock, buffer + 8, 4);
+  // memcpy(&head->numSlots, buffer + 24, 4);
+  // memcpy(&head->numEntries, buffer + 16, 4);
+  // memcpy(&head->numAttrs, buffer + 20, 4);
+  // memcpy(&head->rblock, buffer + 12, 4);
+  // memcpy(&head->lblock, buffer + 8, 4);
 
+  memcpy(&head->pblock, buffer + 4, 4);
+	memcpy(&head->lblock, buffer + 8, 4);
+	memcpy(&head->rblock, buffer + 12, 4);
+	memcpy(&head->numEntries, buffer + 16, 4);
+	memcpy(&head->numAttrs, buffer + 20, 4);
+	memcpy(&head->numSlots, buffer + 24, 4);
   return SUCCESS;
 }
 
@@ -157,8 +163,8 @@ int RecBuffer::getSlotMap(unsigned char *slotMap)
   }
 
   struct HeadInfo head;
+  this->getHeader(&head);
   // get the header of the block using getHeader() function
-  ret = getHeader(&head);
 
   int slotCount = head.numSlots;
 
@@ -166,7 +172,9 @@ int RecBuffer::getSlotMap(unsigned char *slotMap)
   unsigned char *slotMapInBuffer = bufferPtr + HEADER_SIZE;
 
   // copy the values from `slotMapInBuffer` to `slotMap` (size is `slotCount`)
-  memcpy(slotMap, slotMapInBuffer, slotCount);
+  for(int i=0;i<slotCount;i++){
+    slotMap[i]=slotMapInBuffer[i];
+  }
 
   return SUCCESS;
 }

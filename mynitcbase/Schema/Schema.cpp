@@ -1,7 +1,9 @@
 #include "Schema.h"
-
 #include <cmath>
+#include<map>
 #include <cstring>
+#include <map>
+using namespace std;
 
 // Stage 5
 int Schema::openRel(char relName[ATTR_SIZE])
