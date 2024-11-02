@@ -39,23 +39,19 @@ int AttrCacheTable::getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCat
   if(attrCache[relId] == nullptr)
   return E_RELNOTOPEN;
   // check that relId is valid and corresponds to an open relation
-  struct AttrCacheEntry*head=attrCache[relId];
-  while(head!=nullptr){
-    if(strcmp(attrName,head->attrCatEntry.attrName)==0){
-      strcpy(attrCatBuf->relName,head->attrCatEntry.relName);
-      strcpy(attrCatBuf->attrName,head->attrCatEntry.attrName);
-      attrCatBuf->offset=head->attrCatEntry.offset;
-      attrCatBuf->primaryFlag=head->attrCatEntry.primaryFlag;
-      attrCatBuf->rootBlock=head->attrCatEntry.rootBlock;
-      attrCatBuf->attrType=head->attrCatEntry.attrType;
+   AttrCacheEntry* attrCacheEntry = nullptr;
+    for (auto iter = AttrCacheTable::attrCache[relId]; iter != nullptr; iter = iter->next) {
+        if (strcmp(attrName, (iter->attrCatEntry).attrName) == 0) {
+            attrCacheEntry = iter;
+            break;
+        }
     }
-    head=head->next;
-  }
-  // iterate over the entries in the attribute cache and set attrCatBuf to the entry that
-  //    matches attrName
 
-  // no attribute with name attrName for the relation
-  return E_ATTRNOTEXIST;
+    if (attrCacheEntry == nullptr)
+        return E_ATTRNOTEXIST;
+
+    *attrCatBuf = attrCacheEntry->attrCatEntry;
+    return SUCCESS;
 }
 
 
