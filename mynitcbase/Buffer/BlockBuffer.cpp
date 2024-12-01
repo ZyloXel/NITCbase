@@ -41,7 +41,7 @@ int BlockBuffer::getHeader(struct HeadInfo *head){
     int ret = loadBlockAndGetBufferPtr(&bufferPtr);
     
     if(ret != SUCCESS){
-        std::cout<<"Error with getHeader\n";
+        //std::cout<<"Error with getHeader\n";
         return ret;
     }
     //copying all the bufferPtr header data to the struct headInfo
@@ -91,7 +91,7 @@ int RecBuffer::setRecord(union Attribute *rec,int slotNum){
     /* get the starting address of the buffer containing the block
        using loadBlockAndGetBufferPtr(&bufferPtr). */
 
-    std::cout<<"set record called for block= "<<blockNum<<"slotNum= "<<slotNum<<"\n";
+    //std::cout<<"set record called for block= "<<blockNum<<" slotNum= "<<slotNum<<"\n";
 
     unsigned char* bufferPtr;
 
