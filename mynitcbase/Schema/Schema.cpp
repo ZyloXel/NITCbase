@@ -204,30 +204,33 @@ int Schema::deleteRel(char *relName) {
     //     return E_NOTPERMITTED
         // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
         // you may use the following constants: RELCAT_RELNAME and ATTRCAT_RELNAME)
-  if(strcmp(relName,RELCAT_RELNAME)==0 || strcmp(relName,ATTRCAT_RELNAME)==0){
-    return E_NOTPERMITTED;
-  }
+    if(strcmp(relName,RELCAT_RELNAME) == 0 || strcmp(relName,ATTRCAT_RELNAME) == 0){
+        return E_NOTPERMITTED;
+    }
 
     // get the rel-id using appropriate method of OpenRelTable class by
     // passing relation name as argument
+    int relId = OpenRelTable::getRelId(relName);
 
     // if relation is opened in open relation table, return E_RELOPEN
-  int rel_id=OpenRelTable::getRelId(relName);
-  if(rel_id>=0 && rel_id<MAX_OPEN){
-    return E_RELOPEN;
-  }
+
+    if(relId != E_RELNOTOPEN) return E_RELOPEN;
 
     // Call BlockAccess::deleteRelation() with appropriate argument.
 
-    // return the value returned by the above deleteRelation() call
-  int ret=BlockAccess::deleteRelation(relName);
-  return ret;
+    int retVal = BlockAccess::deleteRelation(relName);
 
-    /* the only that should be returned from deleteRelation() is E_RELNOTEXIST.
+    // return the value returned by the above deleteRelation() call
+
+    /* the only thing that should be returned from deleteRelation() is E_RELNOTEXIST.
        The deleteRelation call may return E_OUTOFBOUND from the call to
        loadBlockAndGetBufferPtr, but if your implementation so far has been
        correct, it should not reach that point. That error could only occur
        if the BlockBuffer was initialized with an invalid block number.
     */
+   
+    if(retVal == E_RELNOTEXIST)return SUCCESS;
+    return retVal;
+
 }
 
