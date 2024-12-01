@@ -7,7 +7,7 @@ void clearList(AttrCacheEntry *head)
   for (AttrCacheEntry *it = head, *next; it != nullptr; it = next)
   {
     next = it->next;
-    free(it);
+    if(it)free(it);
   }
 }
 
@@ -122,90 +122,129 @@ OpenRelTable::OpenRelTable()
     }
 
     AttrCacheTable::attrCache[ATTRCAT_RELID] = attrCacheEntryAttr; // Store the head of the list in the attribute cache
-                                                              /*int numberOfAttributes = RelCacheTable::relCache[relId]->relCatEntry.numAttrs;
-                                                               head = createAttrCacheEntryList(numberOfAttributes);
-                                                               attrCacheEntry = head;
-                                                            
-                                                               while (numberOfAttributes--)
-                                                               {
-                                                                   attrCatBlock.getRecord(attrCatRecord, recordId);
-                                                            
-                                                                   AttrCacheTable::recordToAttrCatEntry(
-                                                                       attrCatRecord,
-                                                                       &(attrCacheEntry->attrCatEntry));
-                                                                   attrCacheEntry->recId.slot = recordId++;
-                                                                   attrCacheEntry->recId.block = ATTRCAT_BLOCK;
-                                                            
-                                                                   attrCacheEntry = attrCacheEntry->next;
-                                                               }
-                                                            
-                                                               AttrCacheTable::attrCache[relId] = head;
-                                                           }
-                                                            
-                                                           RecBuffer relCatBuffer(RELCAT_BLOCK);
-                                                           Attribute relCatRecord1[RELCAT_NO_ATTRS];
-                                                            
-                                                           HeadInfo relCatHeader;
-                                                           relCatBuffer.getHeader(&relCatHeader);
-                                                            
-                                                           int relationIndex = -1;
-                                                           // char* relationName = "Students";
-                                                            
-                                                           for (int index = 2; index < relCatHeader.numEntries + 4; index++)
-                                                           {
-                                                               relCatBuffer.getRecord(relCatRecord, index);
-                                                            
-                                                               if (strcmp(relCatRecord1[RELCAT_REL_NAME_INDEX].sVal,
-                                                                          "Students") == 0)
-                                                               { // matching the name of the record we want
-                                                                   relationIndex = index;
-                                                               }
-                                                           }
-                                                            
-                                                           // Setting up tableMetaInfo entries
-                                                            
-                                                           //  in the tableMetaInfo array
-                                                           //   set free = false for RELCAT_RELID and ATTRCAT_RELID
-                                                           //    set relname for RELCAT_RELID and ATTRCAT_RELID
-                                                           for(int i = 0; i < MAX_OPEN; i++) {
-                                                               tableMetaInfo[i].free = true;
-                                                           }
-                                                           tableMetaInfo[RELCAT_RELID].free = false;
-                                                           strcpy(tableMetaInfo[RELCAT_RELID].relName, RELCAT_RELNAME);
-                                                            
-                                                           tableMetaInfo[ATTRCAT_RELID].free = false;
-                                                           strcpy(tableMetaInfo[ATTRCAT_RELID].relName, ATTRCAT_RELNAME); */
+    /*int numberOfAttributes = RelCacheTable::relCache[relId]->relCatEntry.numAttrs;
+     head = createAttrCacheEntryList(numberOfAttributes);
+     attrCacheEntry = head;
+  
+     while (numberOfAttributes--)
+     {
+         attrCatBlock.getRecord(attrCatRecord, recordId);
+  
+         AttrCacheTable::recordToAttrCatEntry(
+             attrCatRecord,
+             &(attrCacheEntry->attrCatEntry));
+         attrCacheEntry->recId.slot = recordId++;
+         attrCacheEntry->recId.block = ATTRCAT_BLOCK;
+  
+         attrCacheEntry = attrCacheEntry->next;
+     }
+  
+     AttrCacheTable::attrCache[relId] = head;
+ }
+  
+ RecBuffer relCatBuffer(RELCAT_BLOCK);
+ Attribute relCatRecord1[RELCAT_NO_ATTRS];
+  
+ HeadInfo relCatHeader;
+ relCatBuffer.getHeader(&relCatHeader);
+  
+ int relationIndex = -1;
+ // char* relationName = "Students";
+  
+ for (int index = 2; index < relCatHeader.numEntries + 4; index++)
+ {
+     relCatBuffer.getRecord(relCatRecord, index);
+  
+     if (strcmp(relCatRecord1[RELCAT_REL_NAME_INDEX].sVal,
+                "Students") == 0)
+     { // matching the name of the record we want
+         relationIndex = index;
+     }
+ }
+  
+ // Setting up tableMetaInfo entries
+  
+ //  in the tableMetaInfo array
+ //   set free = false for RELCAT_RELID and ATTRCAT_RELID
+ //    set relname for RELCAT_RELID and ATTRCAT_RELID
+ for(int i = 0; i < MAX_OPEN; i++) {
+     tableMetaInfo[i].free = true;
+ }
+ tableMetaInfo[RELCAT_RELID].free = false;
+ strcpy(tableMetaInfo[RELCAT_RELID].relName, RELCAT_RELNAME);
+  
+ tableMetaInfo[ATTRCAT_RELID].free = false;
+ strcpy(tableMetaInfo[ATTRCAT_RELID].relName, ATTRCAT_RELNAME); */
 }
 
-OpenRelTable::~OpenRelTable()
-{
+//Stage 8
+OpenRelTable::~OpenRelTable() {
 
-  // close all open relations (from rel-id = 2 onwards. Why?)
-  for (int i = 2; i < MAX_OPEN; ++i)
-  {
-    if (!tableMetaInfo[i].free)
+    for (int i=2;i<MAX_OPEN;i++)
     {
-      OpenRelTable::closeRel(i); // we will implement this function later
+        if(!tableMetaInfo->free)
+        {
+            // close the relation using openRelTable::closeRel().
+            OpenRelTable::closeRel(i);
+        }
     }
-    for (int i = 0; i < MAX_OPEN; i++)
-    {
-      free(RelCacheTable::relCache[i]);        // Free memory allocated for relcache
-      clearList(AttrCacheTable::attrCache[i]); // Free memory for the LL in attrcache
-      RelCacheTable::relCache[i] = nullptr;    // Reset relcache entry to nullptr
-      AttrCacheTable::attrCache[i] = nullptr;  // Reset attrcache entry to nullptr
-    }
-  }
 
-  // free the memory allocated for rel-id 0 and 1 in the caches
-  // free(RelCacheTable::relCache[RELCAT_RELID]);
-  // free(RelCacheTable::relCache[ATTRCAT_RELID]);
+    /**** Closing the catalog relations in the relation cache ****/
+
+    //releasing the relation cache entry of the attribute catalog
+
+    if (RelCacheTable::relCache[ATTRCAT_RELID]->dirty==true) {
+
+        /* Get the Relation Catalog entry from RelCacheTable::relCache
+        Then convert it to a record using RelCacheTable::relCatEntryToRecord(). */
+
+        // declaring an object of RecBuffer class to write back to the buffer
+        RelCatEntry relCatEntry=RelCacheTable::relCache[ATTRCAT_RELID]->relCatEntry;
+        Attribute relCatRecord[RELCAT_NO_ATTRS];
+        RelCacheTable::relCatEntryToRecord(&relCatEntry,relCatRecord);
+        RecId recId=RelCacheTable::relCache[ATTRCAT_RELID]->recId;
+        RecBuffer relCatBlock(recId.block);
+
+        // Write back to the buffer using relCatBlock.setRecord() with recId.slot
+        relCatBlock.setRecord(relCatRecord,recId.slot);
+    }
+    // free the memory dynamically allocated to this RelCacheEntry
+    free(RelCacheTable::relCache[ATTRCAT_RELID]);
+
+
+    //releasing the relation cache entry of the relation catalog
+
+    if(RelCacheTable::relCache[RELCAT_RELID]->dirty==true) {
+
+        /* Get the Relation Catalog entry from RelCacheTable::relCache
+        Then convert it to a record using RelCacheTable::relCatEntryToRecord(). */
+        RelCatEntry relCatEntry = RelCacheTable::relCache[RELCAT_RELID]->relCatEntry;
+        Attribute relCatRecord[RELCAT_NO_ATTRS];
+        RelCacheTable::relCatEntryToRecord(&relCatEntry,relCatRecord);
+
+        // declaring an object of RecBuffer class to write back to the buffer
+        RecId recId=RelCacheTable::relCache[RELCAT_RELID]->recId;
+        RecBuffer relCatBlock(recId.block);
+
+        // Write back to the buffer using relCatBlock.setRecord() with recId.slot
+        relCatBlock.setRecord(relCatRecord,recId.slot);
+    }
+    // free the memory dynamically allocated for this RelCacheEntry
+    free(RelCacheTable::relCache[RELCAT_RELID]);
+
+
+    // free the memory allocated for the attribute cache entries of the
+    // relation catalog and the attribute catalog
+    for(int i=0;i<2;i++){
+      struct AttrCacheEntry *entry=AttrCacheTable::attrCache[i];
+      while ((entry!=nullptr)){
+        struct AttrCacheEntry *temp=entry;
+        entry=entry->next;
+        free(temp);
+      }      
+    }
 }
 
-/* This function will open a relation having name `relName`.
-Since we are currently only working with the relation and attribute catalog, we
-will just hardcode it. In subsequent stages, we will loop through all the relations
-and open the appropriate one.
-*/
 int OpenRelTable::getRelId(char relName[ATTR_SIZE])
 {
 
