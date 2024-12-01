@@ -41,7 +41,7 @@ int BlockBuffer::getHeader(struct HeadInfo *head){
     int ret = loadBlockAndGetBufferPtr(&bufferPtr);
     
     if(ret != SUCCESS){
-        std::cout<<"Error with getHeader\n";
+        //std::cout<<"Error with getHeader\n";
         return ret;
     }
     //copying all the bufferPtr header data to the struct headInfo
@@ -91,7 +91,7 @@ int RecBuffer::setRecord(union Attribute *rec,int slotNum){
     /* get the starting address of the buffer containing the block
        using loadBlockAndGetBufferPtr(&bufferPtr). */
 
-    std::cout<<"set record called for block= "<<blockNum<<"slotNum= "<<slotNum<<"\n";
+    //std::cout<<"set record called for block= "<<blockNum<<" slotNum= "<<slotNum<<"\n";
 
     unsigned char* bufferPtr;
 
@@ -403,36 +403,30 @@ int BlockBuffer::getBlockNum(){
 //Stage 8
 void BlockBuffer::releaseBlock(){
 
-    // if blockNum is INVALID_BLOCKNUM (-1), or it is invalidated already, do nothing
-    if(this->blockNum==INVALID_BLOCKNUM){
-      return;
-    }
+    if(this->blockNum == -1)return;
+    
+    //else
 
-    // else
-    else{
-        /* get the buffer number of the buffer assigned to the block
-           using StaticBuffer::getBufferNum().
-           (this function return E_BLOCKNOTINBUFFER if the block is not
-           currently loaded in the buffer)
-            */
-      int bufferNum=StaticBuffer::getBufferNum(this->blockNum);
+    /* get the buffer number of the buffer assigned to the block
+        using StaticBuffer::getBufferNum().
+        (this function return E_BLOCKNOTINBUFFER if the block is not
+        currently loaded in the buffer)
+    */
+    
+    int bufferNum = StaticBuffer::getBufferNum(this->blockNum);
 
-        // if the block is present in the buffer, free the buffer
-        // by setting the free flag of its StaticBuffer::tableMetaInfo entry
-        // to true.
+    if(bufferNum ==E_BLOCKNOTINBUFFER)return;
 
-        // free the block in disk by setting the data type of the entry
-        // corresponding to the block number in StaticBuffer::blockAllocMap
-        // to UNUSED_BLK.
-        if(bufferNum!=E_BLOCKNOTINBUFFER){
-          StaticBuffer::metainfo[bufferNum].free=true;
-          StaticBuffer::blockAllocMap[this->blockNum]=UNUSED_BLK;
-        }
-        else{
-          return; //block is not present in buffer
-        }
+    // if the block is present in the buffer, free the buffer
+    // by setting the free flag of its StaticBuffer::tableMetaInfo entry
+    // to true.
+    StaticBuffer::metainfo[bufferNum].free = true;
 
-        // set the object's blockNum to INVALID_BLOCK (-1)
-      this->blockNum=INVALID_BLOCKNUM;
-    }
+    // free the block in disk by setting the data type of the entry
+    // corresponding to the block number in StaticBuffer::blockAllocMap
+    // to UNUSED_BLK.
+    StaticBuffer::blockAllocMap[this->blockNum] = UNUSED_BLK;
+
+    // set the object's blockNum to INVALID_BLOCK (-1)
+    this->blockNum = -1;
 }
