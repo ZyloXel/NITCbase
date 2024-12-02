@@ -27,6 +27,8 @@ bool isNumber(char *str)
  * - op: The operator used for the condition (e.g., EQ for equality).
  * - strVal: The value to compare against, represented as a string.
  */
+
+//Edited n included indexing in stage 10
 int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]){
     int srcRelId = OpenRelTable::getRelId(srcRel);
 
@@ -137,6 +139,7 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
 
     RelCacheTable::resetSearchIndex(srcRelId);
     // AttrCacheTable::resetSearchIndex(/* fill arguments */);
+    AttrCacheTable::resetSearchIndex(srcRelId,attr);
 
     // read every record that satisfies the condition by repeatedly calling
     // BlockAccess::search() until there are no more records to be read

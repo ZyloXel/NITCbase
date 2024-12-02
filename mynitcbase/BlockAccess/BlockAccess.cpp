@@ -456,33 +456,85 @@ int BlockAccess::insert(int relId,union Attribute* record){
     return SUCCESS;
 }
 
-//Stage 8
+//Stage 8 
 /*
 NOTE: This function will copy the result of the search to the `record` argument.
       The caller should ensure that space is allocated for `record` array
       based on the number of attributes in the relation.
 */
+// int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrVal, int op) {
+//     // Declare a variable called recid to store the searched record
+//     RecId recId;
+
+//     /* search for the record id (recid) corresponding to the attribute with
+//     attribute name attrName, with value attrval and satisfying the condition op
+//     using linearSearch() */
+//     recId=BlockAccess::linearSearch(relId,attrName,attrVal,op);
+
+//     // if there's no record satisfying the given condition (recId = {-1, -1})
+//     //    return E_NOTFOUND;
+//     if(recId.block==-1 && recId.slot==-1){
+//         return E_NOTFOUND;
+//     }
+
+//     /* Copy the record with record id (recId) to the record buffer (record)
+//        For this Instantiate a RecBuffer class object using recId and
+//        call the appropriate method to fetch the record
+//     */
+//    RecBuffer recBuffer(recId.block);
+//    recBuffer.getRecord(record,recId.slot); //content will be stored in argument record
+
+//     return SUCCESS;
+// }
+
+// Stage 10 we are including B+ tree in search
 int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrVal, int op) {
     // Declare a variable called recid to store the searched record
-    RecId recId;
+    RecId recId={-1,-1};
 
-    /* search for the record id (recid) corresponding to the attribute with
-    attribute name attrName, with value attrval and satisfying the condition op
-    using linearSearch() */
-    recId=BlockAccess::linearSearch(relId,attrName,attrVal,op);
+    /* get the attribute catalog entry from the attribute cache corresponding
+    to the relation with Id=relid and with attribute_name=attrName  */
+    AttrCatEntry attrCatEntry;
+    int ret=AttrCacheTable::getAttrCatEntry(relId,attrName,&attrCatEntry);
+
+    // if this call returns an error, return the appropriate error code
+    if(ret!=SUCCESS){
+        return ret;
+    }
+
+    // get rootBlock from the attribute catalog entry
+    int rootBlk=attrCatEntry.rootBlock;
+    /* if Index does not exist for the attribute (check rootBlock == -1) */ 
+    if(rootBlk==-1){
+
+        /* search for the record id (recid) corresponding to the attribute with
+           attribute name attrName, with value attrval and satisfying the
+           condition op using linearSearch()
+        */
+       recId=BlockAccess::linearSearch(relId,attrName,attrVal,op);
+    }
+    else {
+        // (index exists for the attribute)
+
+        /* search for the record id (recid) correspoding to the attribute with
+        attribute name attrName and with value attrval and satisfying the
+        condition op using BPlusTree::bPlusSearch() */
+        recId=BPlusTree::bPlusSearch(relId,attrName,attrVal,op);
+    }
+
 
     // if there's no record satisfying the given condition (recId = {-1, -1})
-    //    return E_NOTFOUND;
-    if(recId.block==-1 && recId.slot==-1){
+    //     return E_NOTFOUND;
+    if(recId.block==-1 || recId.slot==-1){
         return E_NOTFOUND;
     }
 
-    /* Copy the record with record id (recId) to the record buffer (record)
-       For this Instantiate a RecBuffer class object using recId and
+    /* Copy the record with record id (recId) to the record buffer (record).
+       For this, instantiate a RecBuffer class object by passing the recId and
        call the appropriate method to fetch the record
     */
    RecBuffer recBuffer(recId.block);
-   recBuffer.getRecord(record,recId.slot); //content will be stored in argument record
+   recBuffer.getRecord(record,recId.slot);
 
     return SUCCESS;
 }
