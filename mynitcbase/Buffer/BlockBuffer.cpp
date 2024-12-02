@@ -430,3 +430,43 @@ void BlockBuffer::releaseBlock(){
     // set the object's blockNum to INVALID_BLOCK (-1)
     this->blockNum = -1;
 }
+
+//Stage 10
+
+// call the corresponding parent constructor
+IndBuffer::IndBuffer(char blockType) : BlockBuffer(blockType){}
+
+// call the corresponding parent constructor
+IndBuffer::IndBuffer(int blockNum) : BlockBuffer(blockNum){}
+
+class IndBuffer : public BlockBuffer {
+
+public:
+    //methods
+    IndBuffer(char blockType);
+    IndBuffer(int blockNum);
+    virtual int getEntry(void *ptr, int indexNum) = 0;
+    virtual int setEntry(void *ptr, int indexNum) = 0;
+
+};
+
+// call the corresponding parent constructor
+IndBuffer::IndBuffer(char blockType) : BlockBuffer(blockType){}
+
+// call the corresponding parent constructor
+IndBuffer::IndBuffer(int blockNum) : BlockBuffer(blockNum){}
+
+IndLeaf::IndLeaf() : IndBuffer('L'){} // this is the way to call parent non-default constructor.
+                      // 'L' used to denote IndLeaf.
+
+//this is the way to call parent non-default constructor.
+IndLeaf::IndLeaf(int blockNum) : IndBuffer(blockNum){}
+
+int IndInternal::setEntry(void *ptr, int indexNum) {
+  return 0;
+}
+
+int IndLeaf::setEntry(void *ptr, int indexNum) {
+  return 0;
+}
+
